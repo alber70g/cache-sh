@@ -9,6 +9,9 @@
   "bin": {
     "cash-sh": "./lib/cash-sh.js"
   },
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "ts-node src/index.ts",
