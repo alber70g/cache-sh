@@ -1,8 +1,9 @@
 import { exec } from 'child_process';
-import { readFileSync, existsSync, writeFileSync } from 'fs';
-import path from 'path';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { globSync } from 'glob';
+import path from 'path';
 import { getGitHashForFiles } from './utils/getGitHashForFiles';
+import { isGitInstalledOrThrow } from './utils/isGitInstalled';
 
 export async function cacheSh(
   command: string,
@@ -13,12 +14,15 @@ export async function cacheSh(
     force?: boolean;
     clear?: boolean;
   },
-  execSyncOptions: any = { stdio: 'inherit' }
+  execSyncOptions: any = { stdio: 'inherit' },
 ) {
   args.cwd = args.cwd || process.cwd();
 
   // - expand `args.input` glob to files
   const filePaths = globSync(args.input);
+
+  // - check if git is installed
+  isGitInstalledOrThrow();
 
   // - get hash of files
   const hash = getGitHashForFiles(...filePaths);
@@ -37,7 +41,7 @@ export async function cacheSh(
       // Save hash to cache
       writeFileSync(
         cachePath,
-        JSON.stringify({ ...cacheData, [command]: hash }, null, 2)
+        JSON.stringify({ ...cacheData, [command]: hash }, null, 2),
       );
     }
   } else {

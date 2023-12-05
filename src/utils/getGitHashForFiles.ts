@@ -5,7 +5,7 @@ import { execSync } from 'child_process';
  * command used: cat ./pnpm-lock.yaml | git hash-object --stdin
  */
 export function getGitHashForFiles(...filePaths: string[]) {
-	return execSync(`cat ${filePaths.sort().join(' ')} | git hash-object --stdin`)
-		.toString()
-		.trim();
+  return execSync(`cat ${filePaths.sort().join(' ')} | git hash-object --stdin`)
+    .toString()
+    .trim();
 }

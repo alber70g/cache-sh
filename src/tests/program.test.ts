@@ -1,9 +1,7 @@
 import { spawnSync } from 'child_process';
 import { existsSync, readFileSync, unlinkSync } from 'fs';
 import { resolve } from 'path';
-import { afterAll } from 'vitest';
-import { beforeEach } from 'vitest';
-import { describe, it, expect } from 'vitest';
+import { afterAll, beforeEach, describe, expect, it } from 'vitest';
 
 function createFileOne(workingDir) {
   return spawnSync('node', [

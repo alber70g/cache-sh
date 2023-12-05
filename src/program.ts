@@ -1,12 +1,12 @@
 import { program as programCmd } from 'commander';
-import { cacheSh } from './cache-sh';
 import { readFileSync } from 'fs';
 import path from 'path';
+import { cacheSh } from './cache-sh';
 
 export function getVersionFromPackageJson() {
   const packageJson = readFileSync(
     path.join(__dirname, '../package.json'),
-    'utf-8'
+    'utf-8',
   ) as unknown as { version: string };
   return packageJson.version;
 }
@@ -20,11 +20,11 @@ programCmd
   .requiredOption(
     '-i, --input <input>',
     `input to calculate the hash for the cache using \`glob\`. 
-Use \`cli-glob\` npm package to test your globs`
+Use \`cli-glob\` npm package to test your globs`,
   )
   .option(
     '-C, --config <path>',
-    'set the config path (default: "$PWD/.cacheSh")'
+    'set the config path (default: "$PWD/.cacheSh")',
   )
   .option('-d, --cwd <path>', 'set the current working directory')
   .option('-f, --force', 'ignore the cache the command')
