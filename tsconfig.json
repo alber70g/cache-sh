@@ -23,5 +23,6 @@
     "lib": ["es2019", "DOM"],
     "skipLibCheck": true
   },
-  "include": ["./src/**/*.ts", "./src/**/*.tsx"]
+  "include": ["./src/**/*.ts", "./src/**/*.tsx"],
+  "exclude": ["./src/**/tests/**/*.*"]
 }

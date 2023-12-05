@@ -1,0 +1,26 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`cache-sh > creates a .cache-sh file 1`] = `
+"{
+  "echo 'test1' > src/tests/file.log": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+}"
+`;
+
+exports[`cache-sh > creates a second entry in the .cache-sh file 1`] = `
+"{
+  "echo 'test1' > src/tests/file.log": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+  "echo 'test1' > src/tests/file-two.log": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+}"
+`;
+
+exports[`cache-sh > does not recreate when hitting twice 1`] = `
+"{
+  "echo 'test1' > src/tests/file.log": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+}"
+`;
+
+exports[`cache-sh > does not recreate when hitting twice 2`] = `
+"{
+  "echo 'test1' > src/tests/file.log": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+}"
+`;

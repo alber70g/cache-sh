@@ -3,19 +3,20 @@
   "version": "1.0.0",
   "description": "",
   "bin": {
-    "cash-sh": "bin/cash-sh.js"
+    "cash-sh": "./lib/cash-sh.js"
   },
   "main": "src/index.ts",
   "scripts": {
     "dev": "ts-node src/index.ts",
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "commander": "^11.1.0"
+    "commander": "^11.1.0",
+    "glob": "^10.3.10"
   },
   "devDependencies": {
     "@types/node": "^20.10.3",
