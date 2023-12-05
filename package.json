@@ -1,13 +1,11 @@
 {
   "name": "cache-sh",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "CLI tool to use cache for cli-commands to prevent long running commands from executing unnecessarily",
   "keywords": [],
   "license": "ISC",
   "author": "Albert Groothedde <albert70g@gmail.com>",
-  "bin": {
-    "cash-sh": "./lib/cash-sh.js"
-  },
+  "bin": "./lib/index.js",
   "files": [
     "lib"
   ],
