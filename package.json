@@ -1,6 +1,6 @@
 {
   "name": "cache-sh",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "CLI tool to use cache for cli-commands to prevent long running commands from executing unnecessarily",
   "keywords": [],
   "license": "ISC",
