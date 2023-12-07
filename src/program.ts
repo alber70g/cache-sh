@@ -19,12 +19,11 @@ programCmd
 programCmd
   .requiredOption(
     '-i, --input <input>',
-    `input to calculate the hash for the cache using \`glob\`. 
-Use \`cli-glob\` npm package to test your globs`,
+    `glob that's used as input to check whether the existing files need to be updated`,
   )
   .option(
     '-C, --config <path>',
-    'set the config path (default: "$PWD/.cacheSh")',
+    'set the config path (default: "$PWD/.cache-sh")',
   )
   .option('-d, --cwd <path>', 'set the current working directory')
   .option('-f, --force', 'ignore the cache the command')
@@ -50,3 +49,4 @@ Use \`cli-glob\` npm package to test your globs`,
  * Command: the command to execute and cache
  */
 export const program = programCmd;
+

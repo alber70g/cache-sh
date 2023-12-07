@@ -16,9 +16,11 @@
   },
   "dependencies": {
     "commander": "^11.1.0",
+    "debug": "^4.3.4",
     "glob": "^10.3.10"
   },
   "devDependencies": {
+    "@types/debug": "^4.1.12",
     "@types/node": "^20.10.3",
     "prettier": "^3.1.0",
     "prettier-plugin-organize-imports": "^3.2.4",
