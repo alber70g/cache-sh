@@ -10,7 +10,7 @@ import { isGitInstalledOrThrow } from './utils/isGitInstalled';
 const debug = _debug('cache-sh:root');
 
 export async function cacheSh(
-  command: string,
+  command: string[],
   args: {
     input: string;
     output?: string;
@@ -22,16 +22,20 @@ export async function cacheSh(
 ) {
   args.cwd = args.cwd || process.cwd();
   debug('arguments', args);
+  const cmd = command.join(' ');
 
   if (args.clear) {
     debug('clearing cache');
     console.log('Clearing cache...');
     // - clear cache
     writeFileSync(path.join(args.cwd.trim(), '.cache-sh'), '{}');
+    process.exit(0);
   }
 
+  args.config = args.config || path.join(args.cwd.trim(), '.cache-sh');
+
   // - expand `args.input` glob to files
-  const filePaths = globSync(args.input);
+  const filePaths = globSync(args.input, { follow: true });
   debug('filePaths', filePaths);
 
   if (!filePaths.length) {
@@ -49,21 +53,20 @@ export async function cacheSh(
   debug('hash of filePaths', filePaths, 'before execution', hashBefore);
 
   const hashKey = createHash('sha1')
-    .update(command + filePaths.join(''))
+    .update(cmd + filePaths.join(''))
     .digest('base64');
 
   debug('hashKey', hashKey);
 
   // - check if hash exists in cache (./.cache-sh)
-  const cachePath = path.join(args.cwd.trim(), '.cache-sh');
   let cacheData = {} as { [key: string]: string };
-  debug('using cache path', cachePath);
+  debug('using cache path', args.config);
 
-  const runCommand = createRunCommand(command, args.cwd);
+  const runCommand = createRunCommand(cmd, args.cwd);
 
-  if (args.force || !existsSync(cachePath)) {
+  if (args.force || !existsSync(args.config)) {
     debug('force===true, or cache does not exist, executing command');
-    debug('executing command', command);
+    debug('executing command', cmd);
     // Run command
     await runCommand();
     debug('command executed');
@@ -73,15 +76,18 @@ export async function cacheSh(
 
     debug(
       'writing cache',
-      cachePath,
+      args.config,
       JSON.stringify({ [hashKey]: hashAfter }, null, 2),
     );
     // Save hash to cache
-    writeFileSync(cachePath, JSON.stringify({ [hashKey]: hashAfter }, null, 2));
+    writeFileSync(
+      args.config,
+      JSON.stringify({ [hashKey]: hashAfter }, null, 2),
+    );
   } else {
     debug('cache exists, reading cache');
 
-    const cacheContent = readFileSync(cachePath, 'utf-8');
+    const cacheContent = readFileSync(args.config, 'utf-8');
     cacheData = JSON.parse(cacheContent);
     debug('cacheData', cacheData);
 
@@ -89,7 +95,7 @@ export async function cacheSh(
       debug('cache hit, skipping... based on', cacheData[hashKey], hashBefore);
       console.log('Cache hit, skipping...');
     } else {
-      debug('cache miss, executing command: ', command);
+      debug('cache miss, executing command: ', cmd);
       await runCommand();
 
       const hashAfter = await getGitHashForFiles(filePaths);
@@ -97,12 +103,12 @@ export async function cacheSh(
 
       debug(
         'writing cache',
-        cachePath,
+        args.config,
         JSON.stringify({ ...cacheData, [hashKey]: hashAfter }, null, 2),
       );
       // Save hash to cache
       writeFileSync(
-        cachePath,
+        args.config,
         JSON.stringify({ ...cacheData, [hashKey]: hashAfter }, null, 2),
       );
     }

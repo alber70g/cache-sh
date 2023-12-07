@@ -12,35 +12,37 @@ npm install -g cache-sh
 
 ## Usage
 
-Here are some examples of how you can use cache-sh with `prisma generate` and
+Here are some examples of how you can use `cache-sh` with `prisma generate` and
 `tsc`.
 
 ### Prisma Generate
 
 ```bash
-cache-sh -i "{prisma/schema.prisma,node_modules/@prisma/client/**/*}" prisma generate
+cache-sh -i "{./prisma/schema.prisma,node_modules/**/.prisma/client/**/*.*}" \
+pnpm prisma generate
 ```
 
-In this example, cache-sh will check if the `prisma/schema.prisma` file has
-changed since the last time `prisma generate` was run. If it hasn't, cache-sh
-will skip running the command and use the cached result instead.
+In this example cache-sh will check if the `prisma/schema.prisma` file AND the
+generated `.prisma/client` has changed and exists, since the last time
+`prisma generate` was run.
+
+If it hasn't, `cache-sh` will skip running the command and use the cached result
+instead.
 
 ### TypeScript Compilation
 
 ```bash
-cache-sh -i "src/**/*.ts" -o "dist" -- tsc
+cache-sh -i "{src/**/*,dist/**/*}" tsc
 ```
 
 In this example, cache-sh will check if any `.ts` files in the `src` directory
 have changed since the last time `tsc` was run. If they haven't, cache-sh will
-skip running the command and use the cached result instead.
+skip running the command and assume you can use what's already there, instead.
 
 ## Options
 
 - `-i, --input <input>`: glob that's used as input to check whether the existing
   files need to be updated
-- `-o, --output <output>`: output files that need to exist for the cache to be
-  valid
 - `-C, --config <path>`: set the config path (default: "cwd/.cache-sh")
 - `-f, --force`: ignore the cache the command
 - `-c, --clear`: clear the cache

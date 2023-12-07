@@ -1,24 +1,30 @@
-import { spawnSync } from 'child_process';
+import { exec } from 'child_process';
 import { existsSync, readFileSync, unlinkSync } from 'fs';
 import { resolve } from 'path';
-import { afterAll, beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 function createFileOne(workingDir) {
-  return spawnSync('node', [
-    './lib/index.js',
-    '-i file.log',
-    `-d ${workingDir}`,
-    "echo 'test1' > src/tests/file.log",
-  ]);
+  return exec(
+    'node' +
+      [
+        './lib/index.js',
+        '-i file.log',
+        `-d ${workingDir}`,
+        "echo 'test1' > src/tests/file.log",
+      ].join(' '),
+  );
 }
 
 function createFileTwo(workingDir) {
-  return spawnSync('node', [
-    './lib/index.js',
-    '-i file-two.log',
-    `-d ${workingDir}`,
-    "echo 'test1' > src/tests/file-two.log",
-  ]);
+  return exec(
+    'node' +
+      [
+        './lib/index.js',
+        '-i file-two.log',
+        `-d ${workingDir}`,
+        "echo 'test1' > src/tests/file-two.log",
+      ].join(' '),
+  );
 }
 
 describe('cache-sh', () => {
@@ -30,13 +36,13 @@ describe('cache-sh', () => {
     existsSync(`${__dirname}/file.log`) && unlinkSync(`${__dirname}/file.log`);
   });
 
-  afterAll(() => {
-    existsSync(`${__dirname}/.cache-sh`) &&
-      unlinkSync(`${__dirname}/.cache-sh`);
-    existsSync(`${__dirname}/file.log`) && unlinkSync(`${__dirname}/file.log`);
-    existsSync(`${__dirname}/file-two.log`) &&
-      unlinkSync(`${__dirname}/file-two.log`);
-  });
+  // afterAll(() => {
+  //   existsSync(`${__dirname}/.cache-sh`) &&
+  //     unlinkSync(`${__dirname}/.cache-sh`);
+  //   existsSync(`${__dirname}/file.log`) && unlinkSync(`${__dirname}/file.log`);
+  //   existsSync(`${__dirname}/file-two.log`) &&
+  //     unlinkSync(`${__dirname}/file-two.log`);
+  // });
 
   it('creates a .cache-sh file', () => {
     const first = createFileOne(workingDir);
