@@ -52,8 +52,9 @@ export async function cacheSh(
   const hashBefore = await getGitHashForFiles(filePaths);
   debug('hash of filePaths', filePaths, 'before execution', hashBefore);
 
+  debug(`creating hashKey \`${cmd + args.input}\``);
   const hashKey = createHash('sha1')
-    .update(cmd + filePaths.join(''))
+    .update(cmd + args.input)
     .digest('base64');
 
   debug('hashKey', hashKey);
