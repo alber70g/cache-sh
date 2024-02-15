@@ -10,8 +10,12 @@ const execAsync = promisify(exec);
  * command used: cat ./pnpm-lock.yaml | git hash-object --stdin
  */
 export async function getGitHashForFiles(filePaths: string | string[]) {
+  debug('getting hash for files', filePaths);
   if (!Array.isArray(filePaths)) {
     filePaths = [filePaths];
+  }
+  if(filePaths.length === 0) {
+    return '';
   }
   return (
     await execAsync(

@@ -38,11 +38,6 @@ export async function cacheSh(
   const filePaths = globSync(args.input, { follow: true });
   debug('filePaths', filePaths);
 
-  if (!filePaths.length) {
-    console.error('no files found for glob:', args.input);
-    process.exit(1);
-  }
-
   debug('checking if git is installed');
   // - check if git is installed
   isGitInstalledOrThrow();
@@ -65,12 +60,17 @@ export async function cacheSh(
 
   const runCommand = createRunCommand(cmd, args.cwd);
 
-  if (args.force || !existsSync(args.config)) {
-    debug('force===true, or cache does not exist, executing command');
-    debug('executing command', cmd);
+  if (args.force || !existsSync(args.config) || filePaths.length === 0) {
+    debug(
+      'force=true, or cache does not exist, or no matching files: executing command',
+    );
+    debug(`executing command \`${cmd}\``);
     // Run command
     await runCommand();
     debug('command executed');
+
+    const filePaths = globSync(args.input, { follow: true });
+    debug('filePaths', filePaths);
 
     const hashAfter = await getGitHashForFiles(filePaths);
     debug('hash of filePaths after execution', hashAfter);
@@ -98,6 +98,9 @@ export async function cacheSh(
     } else {
       debug('cache miss, executing command: ', cmd);
       await runCommand();
+
+      const filePaths = globSync(args.input, { follow: true });
+      debug('filePaths', filePaths);
 
       const hashAfter = await getGitHashForFiles(filePaths);
       debug('hash of filePaths after execution', hashAfter);
