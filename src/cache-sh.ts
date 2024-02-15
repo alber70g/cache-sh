@@ -1,6 +1,6 @@
 import { createHash } from 'crypto';
 import _debug from 'debug';
-import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
 import { globSync } from 'glob';
 import path from 'path';
 import { createRunCommand } from './utils/createRunCommand';
@@ -55,12 +55,14 @@ export async function cacheSh(
   debug('hashKey', hashKey);
 
   // - check if hash exists in cache (./.cache-sh)
-  let cacheData = {} as { [key: string]: string };
+  let cacheData = {} as { [key: string]: string } | void;
   debug('using cache path', args.config);
 
   const runCommand = createRunCommand(cmd, args.cwd);
 
-  if (args.force || !existsSync(args.config) || filePaths.length === 0) {
+  cacheData = getCacheData(args.config);
+
+  if (args.force || cacheData === undefined || filePaths.length === 0) {
     debug(
       'force=true, or cache does not exist, or no matching files: executing command',
     );
@@ -86,10 +88,8 @@ export async function cacheSh(
       JSON.stringify({ [hashKey]: hashAfter }, null, 2),
     );
   } else {
-    debug('cache exists, reading cache');
+    debug('valid cache exists, reading cache');
 
-    const cacheContent = readFileSync(args.config, 'utf-8');
-    cacheData = JSON.parse(cacheContent);
     debug('cacheData', cacheData);
 
     if (cacheData[hashKey] && cacheData[hashKey] === hashBefore) {
@@ -117,4 +117,15 @@ export async function cacheSh(
       );
     }
   }
+}
+
+function getCacheData(config: string): { [key: string]: string } | void {
+  if (existsSync(config)) {
+    try {
+      return JSON.parse(readFileSync(config, 'utf8').toString());
+    } catch (e) {
+      unlinkSync(config);
+    }
+  }
+  return;
 }
