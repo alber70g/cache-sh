@@ -36,8 +36,9 @@ programCmd
     'after',
     `
 Examples:
-  $ cache-sh -i "{src/**/*,dist/**/*}" tsc
-  $ cache-sh -i "{./prisma/schema.prisma,node_modules/**/.prisma/client/**/*.*}" pnpm prisma generate  `,
+  $ cache-sh -i "{src/**/*,dist/**/*}" -- tsc
+  $ cache-sh -i hi.log -- "sleep 5 && echo \"hi\" > hi.log"
+  $ cache-sh -i "{./prisma/schema.prisma,node_modules/**/.prisma/client/**/*.*}" -- pnpm prisma generate  `,
   );
 
 /**
