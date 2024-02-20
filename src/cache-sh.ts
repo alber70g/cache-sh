@@ -35,7 +35,10 @@ export async function cacheSh(
   args.config = args.config || path.join(args.cwd.trim(), '.cache-sh');
 
   // - expand `args.input` glob to files
-  const filePaths = globSync(args.input, { follow: true });
+  const getFilePaths = () =>
+    globSync(args.input, { follow: true, nodir: true });
+
+  const filePaths = getFilePaths();
   debug('filePaths', filePaths);
 
   debug('checking if git is installed');
@@ -45,7 +48,7 @@ export async function cacheSh(
 
   // - get hash of files
   const hashBefore = await getGitHashForFiles(filePaths);
-  debug('hash of filePaths', filePaths, 'before execution', hashBefore);
+  debug('hash of filePaths', filePaths, '\nbefore execution', hashBefore);
 
   debug(`creating hashKey \`${cmd + args.input}\``);
   const hashKey = createHash('sha1')
@@ -71,7 +74,7 @@ export async function cacheSh(
     await runCommand();
     debug('command executed');
 
-    const filePaths = globSync(args.input, { follow: true });
+    const filePaths = getFilePaths();
     debug('filePaths', filePaths);
 
     const hashAfter = await getGitHashForFiles(filePaths);
@@ -93,13 +96,18 @@ export async function cacheSh(
     debug('cacheData', cacheData);
 
     if (cacheData[hashKey] && cacheData[hashKey] === hashBefore) {
-      debug('cache hit, skipping... based on', cacheData[hashKey], hashBefore);
+      debug(
+        'cache hit, skipping... based on',
+        hashKey,
+        cacheData[hashKey],
+        hashBefore,
+      );
       console.log('Cache hit, skipping...');
     } else {
       debug('cache miss, executing command: ', cmd);
       await runCommand();
 
-      const filePaths = globSync(args.input, { follow: true });
+      const filePaths = getFilePaths();
       debug('filePaths', filePaths);
 
       const hashAfter = await getGitHashForFiles(filePaths);
