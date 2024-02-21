@@ -4,6 +4,8 @@ cache-sh is a command line tool for caching shell commands. It can be used to
 cache the results of any shell command, reducing the time it takes to run
 repetitive tasks.
 
+[Changelog](./changelog.md)
+
 ## Installation
 
 ```bash
