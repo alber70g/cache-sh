@@ -20,6 +20,9 @@ export async function cacheSh(
     clear?: boolean;
   },
 ) {
+  args.force = args.force
+    ? args.force
+    : process.argv.includes('-f') || process.argv.includes('--force');
   args.cwd = args.cwd || process.cwd();
   debug('arguments', args);
   const cmd = command.join(' ');

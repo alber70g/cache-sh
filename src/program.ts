@@ -36,9 +36,9 @@ programCmd
     'after',
     `
 Examples:
-  $ cache-sh -i "{src/**/*,dist/**/*}" -- tsc
+  $ cache-sh -i "{src/**,dist/**}" -- tsc
   $ cache-sh -i hi.log -- "sleep 2 && echo \"hi\" > hi.log"
-  $ cache-sh -i "{./prisma/schema.prisma,node_modules/**/.prisma/client/**/*.*}" -- pnpm prisma generate  `,
+  $ cache-sh -i "{./prisma/schema.prisma,node_modules/**/.prisma/client/**/*.*}" -- pnpm prisma generate`,
   );
 
 /**
@@ -54,7 +54,6 @@ Examples:
  * -d, --cwd      set the current working directory
  * -v, --version  output the version number
  * -h, --help     display help for command
- *
- * Command: the command to execute and cache
+ * command: the command to execute and cache
  */
 export const program = programCmd;
