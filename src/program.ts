@@ -25,7 +25,7 @@ programCmd
   )
   .option(
     '-C, --config <path>',
-    'set the config path (default: "$PWD/.cache-sh")',
+    'set the config path (default: "(pwd)/.cache-sh")',
   )
   .option('-d, --cwd <path>', 'set the current working directory')
   .option('-f, --force', 'ignore the cache the command')

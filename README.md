@@ -41,17 +41,29 @@ In this example, cache-sh will check if any `.ts` files in the `src` directory
 have changed since the last time `tsc` was run. If they haven't, cache-sh will
 skip running the command and assume you can use what's already there, instead.
 
+## Usage
+
+```sh
+cache-sh [options] -- <command...>
+cache-sh [options] <command...>
+```
+
 ## Options
 
-- `-i, --input <input>`: glob that's used as input to check whether the existing
+- `-V, --version` output the version number
+- `-i, --input <input>` glob that's used as input to check whether the existing
   files need to be updated
-- `-C, --config <path>`: set the config path (default: "cwd/.cache-sh")
-- `-f, --force`: ignore the cache the command
-- `-c, --clear`: clear the cache
-- `-d, --cwd <path>`: set the current working directory
-- `-V, --version`: output the version number
-- `-h, --help`: display help for command
+- `-C, --config <path>` set the config path (default: `(pwd)/.cache-sh`)
+- `-d, --cwd <path>` set the current working directory
+- `-f, --force` ignore the cache the command
+- `-c, --clear` clear the cache
+- `-h, --help` display help for command
 
-## Command
+Examples:
 
-The command to execute and cache.
+```sh
+$ cache-sh -i "{src/**,dist/**}" -- tsc
+$ cache-sh -i hi.log -- "sleep 2 && echo "hi" > hi.log"
+$ cache-sh -i "{./prisma/schema.prisma,node_modules/**/.prisma/client/**/*.*}"\
+-- pnpm prisma generate
+```
