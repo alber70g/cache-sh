@@ -11,8 +11,11 @@
   ],
   "scripts": {
     "build": "tsc",
-    "changelog": "auto-changelog -p -u -l 999 -b 999",
+    "changelog": "auto-changelog -p -u -l 999 -b 999 && git add changelog.md && git commit -m \"chore: update changelog\"",
     "dev": "chokidar \"src/**/*.*\" -c \"tsc\" --initial",
+    "publish:major": "pnpm run changelog && npm version major && npm publish && git push",
+    "publish:minor": "pnpm run changelog && npm version minor && npm publish && git push",
+    "publish:patch": "pnpm run changelog && npm version patch && npm publish && git push",
     "test": "vitest"
   },
   "dependencies": {
